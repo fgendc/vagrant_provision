@@ -1,0 +1,52 @@
+- name: Add Docker Apt signing key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  tags: [docker]
+
+- name: Debian add Docker repository and update apt cache
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ debian_version }} stable
+    update_cache: yes
+    state: present
+  tags: [docker]
+
+- name: Debian Docker is present
+  apt:
+    name: docker-ce
+    state: latest
+    force: yes
+  tags: [docker]
+
+- name: Debian python-pip is present
+  apt:
+    name: python-pip
+    state: present
+    force: yes
+  tags: [docker]
+
+- name: Debian docker-py is present
+  pip:
+    name: docker-py
+    version: 1.7.0
+    state: present
+  tags: [docker]
+
+- name: vagrant user is added to the docker group
+  user:
+    name: ubuntu
+    group: docker
+  register: user_result
+  tags: [docker]
+
+- name: Download docker-compose
+  shell: curl -L https://github.com/docker/compose/releases/download/1.17.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+  become: true
+  
+- name: Install docker-compose
+  shell: chmod +x /usr/local/bin/docker-compose
+  become: true
+
+- name: Swarm Init
+  shell: swarm init
+  when: swarm_init == true

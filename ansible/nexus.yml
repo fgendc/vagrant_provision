@@ -1,0 +1,7 @@
+- hosts: localhost
+  remote_user: vagrant
+  serial: 1
+  roles:
+    - ansible-role-apache
+    - oracle-java
+    - ansible-nexus3-oss

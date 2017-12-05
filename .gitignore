@@ -1,0 +1,5 @@
+*.log
+/ansible/*.retry
+/.vagrant
+/shared/*
+/ansible/roles/hosts/defaults/main.yml
