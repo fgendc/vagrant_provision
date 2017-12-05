@@ -1,0 +1,12 @@
+[submodule "ansible/roles/ansible-nexus3-oss"]
+	path = ansible/roles/ansible-nexus3-oss
+	url = https://github.com/savoirfairelinux/ansible-nexus3-oss.git
+[submodule "ansible/roles/ansible-role-apache"]
+	path = ansible/roles/ansible-role-apache
+	url = https://github.com/geerlingguy/ansible-role-apache.git
+[submodule "ansible/roles/ansible-role-nodejs"]
+	path = ansible/roles/ansible-role-nodejs
+	url = https://github.com/geerlingguy/ansible-role-nodejs.git
+[submodule "ansible/roles/oracle-java"]
+	path = ansible/roles/oracle-java
+	url = https://github.com/ansiblebit/oracle-java.git
