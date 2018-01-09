@@ -11,11 +11,37 @@ Vagrant.configure("2") do |config|
       v.memory = 4096 
     end
   end
-  config.vm.define "ubuntu" do |d|
+  config.vm.define "ubuntu_16" do |d|
     d.vm.box = "ubuntu/xenial64"
     d.vm.network "private_network", type: "dhcp"
+    d.vm.network "forwarded_port", guest: 8080, host: 8280
     d.vm.provider "virtualbox" do |v|        
       v.memory = 4096
+    end
+  end
+
+  config.vm.define "ubuntu14_gui" do |d|
+    d.vm.box = "ubuntu/trusty64"
+    d.vm.network "private_network", type: "dhcp"
+    d.vm.network "forwarded_port", guest: 8080, host: 8280
+    d.vm.provision "shell", inline: "sudo apt-get update"
+    d.vm.provision "shell", inline: "sudo apt-get install -y xfce4 virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11"
+    d.vm.provision "shell", inline: "sudo sed -i 's/allowed_users=.*$/allowed_users=anybody/' /etc/X11/Xwrapper.config"
+    d.vm.provider "virtualbox" do |v|        
+      v.memory = 4096
+      v.gui=true
+    end
+  end
+
+  config.vm.define "ubuntu_14" do |d|
+    d.vm.box = "ubuntu/trusty64"
+    d.vm.network "private_network", type: "dhcp"
+    d.vm.network "forwarded_port", guest: 8080, host: 8180
+    #sobreescribe el forward automatico de ssh con el id: "ssh"
+    d.vm.network :forwarded_port, guest: 22, host: 2322, id: "ssh"
+    d.vm.provider "virtualbox" do |v|        
+      #v.memory = 6144
+      v.memory = 2048
     end
   end
 
