@@ -1,0 +1,72 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+# new_nodes
+
+[OSEv3:vars]
+ansible_ssh_user=root
+ansible_ssh_private_key_file=/root/.ssh/id_rsa
+
+# Tipo de despliegue y versión
+openshift_deployment_type=origin
+openshift_release=v3.11
+openshift_rolling_restart_mode=system
+
+# No se chequea la resolución de los hosts
+openshift_hostname_check=false
+
+# Dominios de acceso.
+openshift_master_default_subdomain=master.openshift.local
+openshift_master_cluster_public_hostname=master.openshift.local
+
+# Configuración de red para el cluster
+#openshift_use_openshift_sdn=true
+#os_sdn_network_plugin_name=redhat/openshift-ovs-multitenant
+
+# Autentificación para Openshit
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_master_htpasswd_users={'admin':'$apr1$ro.CZnfc$854OArPHauodHBrlnnFb..'}
+
+
+# Configuración del almacenamiento del registry en el bucket S3 de AWS
+
+ 
+# El almacenamiento se efectuará de forma dinámica como EBS en AWS
+
+
+# Configuración del ELK para logging
+openshift_logging_install_logging=true
+# openshift_logging_es_nodeselector mandatory since 3.11
+openshift_logging_es_nodeselector={"node-role.kubernetes.io/infra":"true"}
+
+# Configuración de las métricas
+openshift_metrics_install_metrics=false
+openshift_metrics_server_install=false
+# openshift_metrics_hawkular_hostname=hawkular-metrics.{{openshift_master_default_subdomain}}
+
+# Configuración del catálogo de servicios
+openshift_enable_service_catalog=true
+
+# Instalación del ansible interno de Openshift
+template_service_broker_install=true
+
+openshift_disable_check=memory_availability,disk_availability
+
+# Definición de los master
+[masters]
+master1.openshift.local
+
+# Definición de los ETCD
+[etcd]
+master1.openshift.local
+
+# Definición de los nodos
+[nodes]
+master1.openshift.local openshift_node_group_name='node-config-master-infra' openshift_public_hostname='master1.openshift.local' openshift_schedulable=true
+node1.openshift.local openshift_node_group_name='node-config-compute' 
+
+# Para añadir nuevos nodos, ponerlos aquí y descomentar new_nodes de los children (arriba)
+# Además en AWS hay que añadir a los nodos nuevos el tag: kubernetes.io/cluster/ocaso-aws-frankfurt = owned
+# Observar este tag en el resto de nodos de AWS
+#[new_nodes]
